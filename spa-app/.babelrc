@@ -1,0 +1,17 @@
+{
+  "presets": [
+    ["@babel/preset-env", { "modules": false }]
+  ],
+  "plugins": [
+    ["transform-runtime",{
+      "helpers": true,
+      "polyfill": false,
+      "regenerator": false
+    }],
+    ["transform-builtin-extend", {
+      "globals": ["Error", "Array", "Date"]
+    }],
+    "transform-object-rest-spread",
+    "syntax-dynamic-import"
+  ]
+}

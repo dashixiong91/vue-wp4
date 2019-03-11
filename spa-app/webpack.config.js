@@ -1,38 +1,62 @@
-const path=require('path');
+const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports={
-  mode:'development',
-  entry:{
-    main:path.resolve('./src/index.js')
-  },
-  output:{
-
-  },
-  module:{
-    rules:[
-      {
-        test:/\.vue$/,
-        loader:'vue-loader'
-      },
-      // 它会应用到普通的 `.js` 文件
-      // 以及 `.vue` 文件中的 `<script>` 块
-      {
-        test: /\.js$/,
-        loader: 'babel-loader'
-      },
-      // 它会应用到普通的 `.scss` 文件
-      // 以及 `.vue` 文件中的 `<style>` 块
-      {
-        test: /\.scss$/,
-        use: [
-          'vue-style-loader',
-          'css-loader'
-        ]
-      }
+// const isDevMode = process.env.NODE_ENV !== 'production'
+const isDevMode = false;
+module.exports = () => {
+  let config = {
+    mode: isDevMode ? 'development' : 'production',
+    entry: {
+      main: path.resolve('./src/index.js')
+    },
+    output: {
+      path: path.resolve('./dist'),
+      filename: isDevMode ? '[name].js' : '[name]-[chunkhash].js',
+      chunkFilename: isDevMode ? '[name].js' : '[name]-[chunkhash].js',
+      publicPath: ''
+    },
+    module: {
+      rules: [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader'
+        },
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          include: [ path.resolve('./src') ],
+          loader: 'babel-loader'
+        },
+        {
+          test: /\.css$/,
+          include: /node_modules/,
+          use: [
+            { loader: isDevMode ? 'vue-style-loader':MiniCssExtractPlugin.loader  },
+            { loader: 'css-loader', options: { importLoaders: 1 } },
+            { loader: 'postcss-loader' },
+          ],
+        },
+        {
+          test: /\.scss$/,
+          exclude: /node_modules/,
+          use: [
+            { loader: isDevMode ? 'vue-style-loader':MiniCssExtractPlugin.loader },
+            { loader: 'css-loader', options: { importLoaders: 2 } },
+            { loader: 'postcss-loader' },
+            { loader: 'sass-loader' },
+          ]
+        }
+      ]
+    },
+    plugins: [
+      new VueLoaderPlugin()
     ]
-  },
-  plugins:[
-    new VueLoaderPlugin()
-  ]
+  }
+  if (!isDevMode) {
+    config.plugins.push(new MiniCssExtractPlugin({
+      filename: isDevMode ? '[name].js' : '[name]-[contenthash].js',
+    }))
+  }
+  return config;
 }

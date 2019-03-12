@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --config ./webpack.config.js"
+    "build": "node ./server/build"
   },
   "devDependencies": {
     "@babel/core": "~7.3.4",
@@ -29,6 +29,7 @@
     "webpack-cli": "~3.2.3"
   },
   "dependencies": {
+    "koa": "~2.7.0",
     "vue": "~2.6.8",
     "vue-router": "~3.0.2"
   },

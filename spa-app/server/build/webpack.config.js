@@ -20,6 +20,9 @@ module.exports = () => {
       publicPath: ''
     },
     target:'web',
+    resolve:{
+      extensions: ['.js', '.json', '.vue']
+    },
     module: {
       rules: [
         {

@@ -1,7 +1,10 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
+// 开发模式（建议仅开发机上true,服务器上均false）
 // const isDevMode = process.env.NODE_ENV !== 'production'
 const isDevMode = false;
 module.exports = () => {
@@ -16,21 +19,21 @@ module.exports = () => {
       chunkFilename: isDevMode ? '[name].js' : '[name]-[chunkhash].js',
       publicPath: ''
     },
+    target:'web',
     module: {
       rules: [
         {
           test: /\.vue$/,
+          exclude: /node_modules/,
           loader: 'vue-loader'
         },
         {
           test: /\.js$/,
           exclude: /node_modules/,
-          include: [ path.resolve('./src') ],
           loader: 'babel-loader'
         },
         {
           test: /\.css$/,
-          include: /node_modules/,
           use: [
             { loader: isDevMode ? 'vue-style-loader':MiniCssExtractPlugin.loader  },
             { loader: 'css-loader', options: { importLoaders: 1 } },
@@ -50,12 +53,14 @@ module.exports = () => {
       ]
     },
     plugins: [
+      new webpack.ProgressPlugin(),
+      new CleanWebpackPlugin(),
       new VueLoaderPlugin()
     ]
   }
   if (!isDevMode) {
     config.plugins.push(new MiniCssExtractPlugin({
-      filename: isDevMode ? '[name].js' : '[name]-[contenthash].js',
+      filename: isDevMode ? '[name].css' : '[name]-[contenthash].css',
     }))
   }
   return config;

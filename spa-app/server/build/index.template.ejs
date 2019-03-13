@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>vue-spa-demo-with-wp4</title>
+</head>
+<body>
+  <div class="variables">
+      process.env variables:
+      <%= process.env.NODE_ENV %>
+      htmlWebpackPlugin variables:
+      <%= JSON.stringify(htmlWebpackPlugin,null,2) %>
+  </div>
+  <div id="app"></div>
+</body>
+</html>

@@ -7,6 +7,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const liveReloadPlugin = require('./liveReloadPlugin');
+const utils = require('./utils');
 const envs = require('../envs');
 const config =require('../config');
 
@@ -118,7 +119,9 @@ module.exports = () => {
         ROUTER_PREFIX: JSON.stringify(config.staticPrefix),
       }),
       new HtmlWebpackPlugin({
-        template:path.resolve(__dirname,'./index.template.html')
+        template:path.resolve(__dirname,'./index.template.ejs'),
+        templateParameters:utils.templateParametersGenerator,
+        parameters:{ process:{ env:process.env }}
       })
     ]
   }

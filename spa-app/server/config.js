@@ -1,3 +1,3 @@
 module.exports={
-  staticPrefix:'/c/fe/'
+  staticPrefix:'/ent/fe/'
 }

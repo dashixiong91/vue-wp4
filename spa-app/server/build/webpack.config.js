@@ -4,6 +4,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const liveReloadPlugin = require('./liveReloadPlugin');
 const envs = require('../envs');
 const config =require('../config');
 
@@ -111,6 +112,8 @@ module.exports = () => {
     webpackConfig.plugins.push(new MiniCssExtractPlugin({
       filename: isDevMode ? '[name].css' : '[name]-[contenthash].css',
     }))
+  }else{
+    webpackConfig.plugins.push(liveReloadPlugin);
   }
   return webpackConfig;
 }

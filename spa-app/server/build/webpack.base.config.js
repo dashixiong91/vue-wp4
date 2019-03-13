@@ -1,4 +1,3 @@
-const path = require('path');
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -70,8 +69,14 @@ module.exports = () => {
       new webpack.DefinePlugin({
         ROUTER_PREFIX: JSON.stringify(config.staticPrefix),
       }),
-      
     ]
+  }
+  if (!utils.isDevMode) {
+    webpackConfig.plugins = webpackConfig.plugins.concat([
+      new MiniCssExtractPlugin({
+        filename: utils.isDevMode ? '[name].css' : '[name]-[contenthash].css',
+      }),
+    ]);
   }
   return webpackConfig;
 }

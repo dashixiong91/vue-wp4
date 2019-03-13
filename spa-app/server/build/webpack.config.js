@@ -1,8 +1,13 @@
+const path= require('path');
 const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin =require('html-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
+const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
 const nodeExternals = require('webpack-node-externals')
+const liveReloadPlugin = require('./plugins/liveReloadPlugin');
 const baseConfig = require('./webpack.base.config.js');
 const utils = require('./utils');
 
@@ -56,20 +61,14 @@ module.exports = () => {
       new VueSSRClientPlugin()
     ]
   });
-  if (!utils.isDevMode) {
-    clientConfig.plugins = webpackConfig.plugins.concat([
-      new MiniCssExtractPlugin({
-        filename: utils.isDevMode ? '[name].css' : '[name]-[contenthash].css',
-      }),
-    ]);
-  }else{
+  if(utils.isDevMode){
     clientConfig.plugins.push(liveReloadPlugin);
   }
   // 服务端配置
   let serverConfig=merge(baseConfig(),{
     name:'bundle-server',
     target:'node',
-    entry: utils.resolve('./src/server-client.js'),
+    entry: utils.resolve('./src/entry-server.js'),
     output: {
       libraryTarget: 'commonjs2'
     },
@@ -81,7 +80,7 @@ module.exports = () => {
     }),
     plugins: [
       // 输出vue-ssr-server-bundle.json
-      new VueSSRServerPlugin()
+      new VueSSRServerPlugin(),
     ]
   })
   return [clientConfig,serverConfig];

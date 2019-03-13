@@ -1,3 +1,4 @@
+const path = require('path');
 const envs = require('../envs');
 // 开发模式
 exports.isDevMode = envs.isLocal;

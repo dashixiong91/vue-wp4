@@ -26,24 +26,33 @@ const handleStats = (stats) => {
     children: Object.assign({}, opts, { children: false }),
   })));
 };
-// 包装webpack compiler方法，支持async/await
-const webpackAsyncfy = async (method='run',webpackConfig,opts) =>{
+// 包装webpack run方法，支持async/await
+const webpackRun = async (webpackConfig,opts) =>{
   const compiler = webpack(webpackConfig);
-  const compilerMethod = util.promisify(compiler[method].bind(compiler));
-  let stats=null;
-  if(method=='run'){
-    stats = await compilerMethod();
-  }else{
-    stats = await compilerMethod(opts);
-  }
+  const compilerMethod = util.promisify(compiler.run.bind(compiler));
+  let stats=await compilerMethod();
   handleStats(stats);
   return stats;
 }
-const webpackRun = async (webpackConfig)=>{
-  return webpackAsyncfy('run',webpackConfig)
-}
-const webpackWatch= async(webpackConfig,opts={})=>{
-  return webpackAsyncfy('watch',webpackConfig,opts)
+
+const webpackWatch= async(webpackConfig,opts={},callback=()=>{})=>{
+  const compiler = webpack(webpackConfig);
+  return compiler.watch(opts,(error,stats)=>{
+    if(error){
+      logger.error(error);
+      logger.info('[webpack]:build error!!!')
+      callback(error,stats);
+      return;
+    }
+    try{
+      handleStats(stats);
+      logger.info('[webpack]:build success!');
+    }catch(e){
+      logger.error(e);
+      logger.info('[webpack]:build error!!!')
+      callback(e,stats);
+    }
+  })
 }
 
 module.exports={ webpackRun, webpackWatch }

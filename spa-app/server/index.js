@@ -9,14 +9,8 @@ const config = require('./config');
 
 const logger=console;
 
-const runWebpackWatch = async ()=>{
-  try{
-    await webpackWatch(webpackConfig);
-    logger.info('[webpack]:build success!')
-  }catch(error){
-    logger.info('[webpack]:build error!!!')
-    logger.error(error);
-  }
+const runWebpackWatch = ()=>{
+  webpackWatch(webpackConfig)
 }
 const runHttpServer = async ()=>{
   const PORT = process.env.PORT || 8081;
@@ -27,7 +21,7 @@ const runHttpServer = async ()=>{
 }
 (async ()=>{
   if(envs.isLocal){
-    await runWebpackWatch();
+    runWebpackWatch();
   }
   await runHttpServer();
 })()

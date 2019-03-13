@@ -14,6 +14,11 @@ const routes=[
     path: '/about',
     component: () => import(/* webpackChunkName: 'about' */'./pages/about/index.vue'),
   },
+  {
+    name:'404',
+    path:'*',
+    component: () => import(/* webpackChunkName: '404' */'./pages/error/404.vue'),
+  }
 ]
 
 export default routes;

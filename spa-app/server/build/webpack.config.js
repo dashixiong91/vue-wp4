@@ -3,6 +3,8 @@ const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const liveReloadPlugin = require('./liveReloadPlugin');
 const envs = require('../envs');
@@ -49,7 +51,19 @@ module.exports = () => {
             reuseExistingChunk: true
           }
         }
-      }
+      },
+      minimizer:[
+        new TerserPlugin({
+          terserOptions: {
+            output: {
+              comments: false,
+            },
+          },
+        }),
+        new OptimizeCssAssetsPlugin({
+          cssProcessorOptions: { safe: true,discardComments: { removeAll: true } },
+        })
+      ]
     },
     resolve:{
       extensions: ['.js', '.json', '.vue'],
@@ -109,9 +123,11 @@ module.exports = () => {
     ]
   }
   if (!isDevMode) {
-    webpackConfig.plugins.push(new MiniCssExtractPlugin({
-      filename: isDevMode ? '[name].css' : '[name]-[contenthash].css',
-    }))
+    webpackConfig.plugins = webpackConfig.plugins.concat([
+      new MiniCssExtractPlugin({
+        filename: isDevMode ? '[name].css' : '[name]-[contenthash].css',
+      }),
+    ]);
   }else{
     webpackConfig.plugins.push(liveReloadPlugin);
   }

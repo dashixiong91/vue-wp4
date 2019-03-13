@@ -6,7 +6,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const liveReloadPlugin = require('./liveReloadPlugin');
+const liveReloadPlugin = require('./plugins/liveReloadPlugin');
 const utils = require('./utils');
 const envs = require('../envs');
 const config =require('../config');
@@ -122,7 +122,7 @@ module.exports = () => {
         template:path.resolve(__dirname,'./index.template.ejs'),
         templateParameters:utils.templateParametersGenerator,
         parameters:{ process:{ env:process.env }}
-      })
+      }),
     ]
   }
   if (!isDevMode) {

@@ -1,4 +1,4 @@
-exports.templateParametersGenerator = function (compilation, assets, options) {
+exports.templateParametersGenerator = (compilation, assets, options) =>{
   let parameters = options.parameters||{}
   return {
     compilation: compilation,

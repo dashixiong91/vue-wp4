@@ -1,3 +1,7 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+
+Vue.use(Router);
 
 const routes=[
   {
@@ -21,4 +25,10 @@ const routes=[
   }
 ]
 
-export default routes;
+export function createRouter() {
+  return new VueRouter({
+    base:ROUTER_PREFIX,
+    mode:'history',
+    routes,
+  });
+};

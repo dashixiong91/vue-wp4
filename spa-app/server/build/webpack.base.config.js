@@ -64,7 +64,7 @@ module.exports = () => {
     },
     plugins: [
       new webpack.ProgressPlugin(),
-      // new CleanWebpackPlugin(),
+      new CleanWebpackPlugin(),
       new VueLoaderPlugin(),
       new webpack.DefinePlugin({
         ROUTER_PREFIX: JSON.stringify(config.staticPrefix),

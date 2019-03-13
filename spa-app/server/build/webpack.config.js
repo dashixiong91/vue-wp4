@@ -1,27 +1,60 @@
 const path = require('path');
+const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const envs = require('../envs');
+const config =require('../config');
+
 
 // 开发模式（建议仅开发机上true,服务器上均false）
-// const isDevMode = process.env.NODE_ENV !== 'production'
-const isDevMode = false;
+const isDevMode = envs.isLocal;
+
+// 解析路径
+const resolve=(filename)=>{
+  const baseDir= path.resolve(__dirname,'../../')
+  return path.resolve(baseDir,filename);
+}
+// 导出webpackConfig
 module.exports = () => {
-  let config = {
+  let webpackConfig = {
     mode: isDevMode ? 'development' : 'production',
+    target:'web',
     entry: {
-      main: path.resolve('./src/index.js')
+      main: resolve('./src/index.js')
     },
     output: {
-      path: path.resolve('./dist'),
+      path: resolve('./dist'),
+      hashDigestLength:7,
       filename: isDevMode ? '[name].js' : '[name]-[chunkhash].js',
       chunkFilename: isDevMode ? '[name].js' : '[name]-[chunkhash].js',
-      publicPath: ''
+      publicPath: config.staticPrefix
     },
-    target:'web',
+    optimization:{
+      moduleIds: 'hashed',
+      namedChunks: true,
+      runtimeChunk: {
+        name: 'manifest'
+      },
+      splitChunks:{
+        chunks:'all',
+        maxInitialRequests:5,
+        cacheGroups:{
+          verdor:{
+            test: /node_modules/,
+            name: 'verdor',
+            priority: 1,
+            reuseExistingChunk: true
+          }
+        }
+      }
+    },
     resolve:{
-      extensions: ['.js', '.json', '.vue']
+      extensions: ['.js', '.json', '.vue'],
+      alias:{
+        assets: resolve('./src/assets'),
+      }
     },
     module: {
       rules: [
@@ -52,19 +85,32 @@ module.exports = () => {
             { loader: 'postcss-loader' },
             { loader: 'sass-loader' },
           ]
+        },
+        {
+          test:/\.(png|jpg|gif|woff|ttf|svg)$/,
+          loader:'url-loader',
+          options:{
+            limit:8 * 1024
+          }
         }
       ]
     },
     plugins: [
       new webpack.ProgressPlugin(),
       new CleanWebpackPlugin(),
-      new VueLoaderPlugin()
+      new VueLoaderPlugin(),
+      new webpack.DefinePlugin({
+        ROUTER_PREFIX: JSON.stringify(config.staticPrefix),
+      }),
+      new HtmlWebpackPlugin({
+        template:path.resolve(__dirname,'./index.template.html')
+      })
     ]
   }
   if (!isDevMode) {
-    config.plugins.push(new MiniCssExtractPlugin({
+    webpackConfig.plugins.push(new MiniCssExtractPlugin({
       filename: isDevMode ? '[name].css' : '[name]-[contenthash].css',
     }))
   }
-  return config;
+  return webpackConfig;
 }

@@ -15,6 +15,7 @@ export default {
 <style lang="scss" scoped>
 .list{
   line-height: 50px;
+  padding: 10px;
   font-size:13px;
   border:1px solid #ddd;
   display: flex;

@@ -39,10 +39,10 @@ const webpackAsyncfy = async (method='run',webpackConfig,opts) =>{
   handleStats(stats);
   return stats;
 }
-const webpackRun=(webpackConfig)=>{
+const webpackRun = async (webpackConfig)=>{
   return webpackAsyncfy('run',webpackConfig)
 }
-const webpackWatch=(webpackConfig,opts={})=>{
+const webpackWatch= async(webpackConfig,opts={})=>{
   return webpackAsyncfy('watch',webpackConfig,opts)
 }
 

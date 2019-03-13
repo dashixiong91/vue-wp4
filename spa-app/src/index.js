@@ -8,9 +8,10 @@ import './styles/main.css';
 Vue.use(VueRouter);
 
 const router=new VueRouter({
+  base:ROUTER_PREFIX,
+  mode:'history',
   routes,
 });
-
 new Vue({
   el:'#app',
   router,

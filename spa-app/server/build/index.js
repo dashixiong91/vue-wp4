@@ -34,8 +34,8 @@ const webpackRun = async (webpackConfig,opts) =>{
   handleStats(stats);
   return stats;
 }
-
-const webpackWatch= async(webpackConfig,opts={},callback=()=>{})=>{
+// webpack watch编译
+const webpackWatch= (webpackConfig,opts={},callback=()=>{})=>{
   const compiler = webpack(webpackConfig);
   return compiler.watch(opts,(error,stats)=>{
     if(error){

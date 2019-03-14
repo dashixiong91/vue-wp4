@@ -1,7 +1,7 @@
 const os = require('os');
 let isLocal = os.hostname().endsWith('.local');
 
-//isLocal=false;
+// isLocal=false;
 
 module.exports = { isLocal };
 

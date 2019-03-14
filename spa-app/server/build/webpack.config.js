@@ -52,11 +52,11 @@ module.exports = () => {
       ]
     },
     plugins:[
-      new HtmlWebpackPlugin({
-        template:path.resolve(__dirname,'./template/index.ejs'),
+      /* new HtmlWebpackPlugin({
+        template:path.resolve(__dirname,'./template/index.hw.ejs'),
         templateParameters:utils.templateParametersGenerator,
         parameters:{ process:{ env:process.env }}
-      }),
+      }), */
       // 生成 `vue-ssr-client-manifest.json`。
       new VueSSRClientPlugin()
     ]

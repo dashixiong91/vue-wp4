@@ -9,6 +9,7 @@
   <% for (let url of manifest.css||[]) { %>
     <link href="<%= url %>" rel="stylesheet">
   <% } %>
+  <!-- css-inject end -->
 </head>
 <body>
   <script>window.initialData = JSON.parse('<%- JSON.stringify(initialData) %>');</script>
@@ -27,5 +28,6 @@
   <% for (let url of manifest.js||[]) { %>
     <script type="text/javascript" src="<%= url %>" ></script>
   <% } %>
+  <!-- js-inject end -->
 </body>
 </html>

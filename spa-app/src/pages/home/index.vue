@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    首页132123
+    首页
     <div class="list" v-for="n in 5" :key="n">
       <div class="list__text">{{n}}</div>
     </div>

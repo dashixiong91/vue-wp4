@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const path = require('path');
 const webpackConfig = require('./build/webpack.config')();
-const {webpackWatch} = require('./build');
+const { webpackWatch } = require('./build');
 const envs = require('./envs');
 const staticAssets = require('./middlewares/staticAssets');
 const config = require('./config');

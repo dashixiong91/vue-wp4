@@ -1,9 +1,9 @@
 const path= require('path');
 const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin =require('html-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
 const nodeExternals = require('webpack-node-externals')
@@ -53,7 +53,7 @@ module.exports = () => {
     },
     plugins:[
       new HtmlWebpackPlugin({
-        template:path.resolve(__dirname,'./index.template.ejs'),
+        template:path.resolve(__dirname,'./template/index.ejs'),
         templateParameters:utils.templateParametersGenerator,
         parameters:{ process:{ env:process.env }}
       }),
@@ -63,15 +63,25 @@ module.exports = () => {
   });
   if(utils.isDevMode){
     clientConfig.plugins.push(liveReloadPlugin);
+  }else{
+    clientConfig.plugins = clientConfig.plugins.concat([
+      new MiniCssExtractPlugin({
+        filename: utils.isDevMode ? '[name].css' : '[name]-[contenthash].css',
+      }),
+    ]);
   }
   // 服务端配置
-  let serverConfig=merge(baseConfig(),{
+  let serverConfig=merge(baseConfig(true),{
     name:'bundle-server',
     target:'node',
     entry: utils.resolve('./src/entry-server.js'),
     output: {
       libraryTarget: 'commonjs2'
     },
+    // https://webpack.js.org/configuration/externals/#function
+    // https://github.com/liady/webpack-node-externals
+    // 外置化应用程序依赖模块。可以使服务器构建速度更快，
+    // 并生成较小的 bundle 文件。
     externals: nodeExternals({
       // 不要外置化 webpack 需要处理的依赖模块。
       // 你可以在这里添加更多的文件类型。例如，未处理 *.vue 原始文件，

@@ -6,7 +6,7 @@ const utils = require('./utils');
 const config =require('../config');
 
 // 导出webpackConfig
-module.exports = () => {
+module.exports = (isServer=false) => {
   let webpackConfig = {
     mode: utils.isDevMode ? 'development' : 'production',
     entry: {},
@@ -38,7 +38,7 @@ module.exports = () => {
         {
           test: /\.css$/,
           use: [
-            { loader: utils.isDevMode ? 'vue-style-loader':MiniCssExtractPlugin.loader  },
+            { loader: (utils.isDevMode||isServer) ? 'vue-style-loader':MiniCssExtractPlugin.loader  },
             { loader: 'css-loader', options: { importLoaders: 1 } },
             { loader: 'postcss-loader' },
           ],
@@ -47,7 +47,7 @@ module.exports = () => {
           test: /\.scss$/,
           exclude: /node_modules/,
           use: [
-            { loader: utils.isDevMode ? 'vue-style-loader':MiniCssExtractPlugin.loader },
+            { loader: (utils.isDevMode||isServer) ? 'vue-style-loader':MiniCssExtractPlugin.loader },
             { loader: 'css-loader', options: { importLoaders: 2 } },
             { loader: 'postcss-loader' },
             { loader: 'sass-loader' },
@@ -71,12 +71,6 @@ module.exports = () => {
       }),
     ]
   }
-  if (!utils.isDevMode) {
-    webpackConfig.plugins = webpackConfig.plugins.concat([
-      new MiniCssExtractPlugin({
-        filename: utils.isDevMode ? '[name].css' : '[name]-[contenthash].css',
-      }),
-    ]);
-  }
+  
   return webpackConfig;
 }

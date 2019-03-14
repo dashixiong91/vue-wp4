@@ -64,6 +64,7 @@ module.exports = () => {
   if(utils.isDevMode){
     clientConfig.plugins.push(liveReloadPlugin);
   }else{
+    //TODO:抽取css暂时不能在vue-ssr状态是用，官方说明只要是提供vue-ssr-client-manifest.json的情况下是ok的，待解决
     clientConfig.plugins = clientConfig.plugins.concat([
       new MiniCssExtractPlugin({
         filename: utils.isDevMode ? '[name].css' : '[name]-[contenthash].css',

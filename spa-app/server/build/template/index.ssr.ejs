@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>vue-spa-demo-with-wp4</title>
   <!-- css-inject -->
-  <% for (let url of manifest.css) { %>
+  <% for (let url of manifest.css||[]) { %>
     <link href="<%= url %>" rel="stylesheet">
   <% } %>
 </head>
@@ -24,7 +24,7 @@
     <%- JSON.stringify(manifest) %>
   </div>
   <!-- js-inject -->
-  <% for (let url of manifest.js) { %>
+  <% for (let url of manifest.js||[]) { %>
     <script type="text/javascript" src="<%= url %>" ></script>
   <% } %>
 </body>

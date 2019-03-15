@@ -19,6 +19,7 @@ module.exports = {
   },
   "rules":{
     "global-require": 0,
+    "consistent-return": 1,
     "import/no-extraneous-dependencies":0,
     "import/prefer-default-export":0
   }

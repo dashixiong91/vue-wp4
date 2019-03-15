@@ -60,7 +60,7 @@ const ejsSSRRender = (root, prefix = '/') => {
       ctx.body = ejsRenderer(data);
       return;
     }
-    send(ctx, newpath, {
+    return send(ctx, newpath, {
       root,
     });
   }).routes();
@@ -93,7 +93,7 @@ const vueSSRRender = (root, prefix = '/') => {
       ctx.body = await vueRenderer.renderToString(context);
       return;
     }
-    send(ctx, newpath, {
+    return send(ctx, newpath, {
       root,
     });
   }).routes();

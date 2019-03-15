@@ -41,16 +41,16 @@ const webpackWatch = (config, opts = {}, callback = () => {}) => {
   return compiler.watch(opts, (error, stats) => {
     if (error) {
       logger.error(error);
-      logger.info('[webpack]:build error!!!');
+      logger.info('[webpack] build error!!!');
       callback(error, stats);
       return;
     }
     try {
       handleStats(stats);
-      logger.info('[webpack]:build success!');
+      logger.info('[webpack] build success!');
     } catch (e) {
       logger.error(e);
-      logger.info('[webpack]:build error!!!');
+      logger.info('[webpack] build error!!!');
       callback(e, stats);
     }
   });
@@ -59,13 +59,14 @@ const webpackWatch = (config, opts = {}, callback = () => {}) => {
 module.exports = { webpackRun, webpackWatch };
 
 if (require.main === module) {
-  webpackRun(webpackConfig)
-    .then(() => {
+  (async () => {
+    try {
+      await webpackRun(webpackConfig);
       logger.info('[webpack]:build success!');
-    })
-    .catch((error) => {
-      logger.info('[webpack]:build error!!!');
+    } catch (error) {
       logger.error(error);
+      logger.info('[webpack]:build error!!!');
       process.exit(1);
-    });
+    }
+  })();
 }

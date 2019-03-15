@@ -20,8 +20,12 @@ const runHttpServer = async () => {
   app.use(errorHandler);
   app.use(httpLogger);
   app.use(staticAssets(path.resolve(__dirname, '../dist/'), config.staticPrefix));
-  app.listen(PORT);
-  logger.log(`[koa]:server is listening at http://localhost:${PORT}`);
+  app.listen(PORT, () => {
+    logger.log(`[app] server is listening at http://localhost:${PORT}`);
+  });
+  app.on('error', (error, ctx) => {
+    logger.error('[app] Unhandled error:', error, ctx);
+  });
 };
 (async () => {
   if (envs.isLocal) {

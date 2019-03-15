@@ -1,3 +1,3 @@
-module.exports={
-  staticPrefix:'/ent/fe/'
-}
+module.exports = {
+  staticPrefix: '/ent/fe/',
+};

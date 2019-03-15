@@ -1,12 +1,12 @@
-const path= require('path');
+// const path = require('path');
 const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
-const HtmlWebpackPlugin =require('html-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
-const nodeExternals = require('webpack-node-externals')
+const nodeExternals = require('webpack-node-externals');
 const liveReloadPlugin = require('./plugins/liveReloadPlugin');
 const baseConfig = require('./webpack.base.config.js');
 const utils = require('./utils');
@@ -14,31 +14,31 @@ const utils = require('./utils');
 // 导出webpackConfig
 module.exports = () => {
   // 客户端配置
-  let clientConfig=merge(baseConfig(),{
-    name:'bundle-client',
-    target:'web',
+  const clientConfig = merge(baseConfig(), {
+    name: 'bundle-client',
+    target: 'web',
     entry: {
-      main: utils.resolve('./src/entry-client.js')
+      main: utils.resolve('./src/entry-client.js'),
     },
-    optimization:{
+    optimization: {
       moduleIds: 'hashed',
       namedChunks: true,
       runtimeChunk: {
-        name: 'manifest'
+        name: 'manifest',
       },
-      splitChunks:{
-        chunks:'all',
-        maxInitialRequests:5,
-        cacheGroups:{
-          verdor:{
+      splitChunks: {
+        chunks: 'all',
+        maxInitialRequests: 5,
+        cacheGroups: {
+          verdor: {
             test: /node_modules/,
             name: 'verdor',
             priority: 1,
-            reuseExistingChunk: true
-          }
-        }
+            reuseExistingChunk: true,
+          },
+        },
       },
-      minimizer:[
+      minimizer: [
         new TerserPlugin({
           terserOptions: {
             output: {
@@ -47,24 +47,24 @@ module.exports = () => {
           },
         }),
         new OptimizeCssAssetsPlugin({
-          cssProcessorOptions: { safe: true,discardComments: { removeAll: true } },
-        })
-      ]
+          cssProcessorOptions: { safe: true, discardComments: { removeAll: true } },
+        }),
+      ],
     },
-    plugins:[
+    plugins: [
       /* new HtmlWebpackPlugin({
         template:path.resolve(__dirname,'./template/index.hw.ejs'),
         templateParameters:utils.templateParametersGenerator,
         parameters:{ process:{ env:process.env }}
       }), */
       // 生成 `vue-ssr-client-manifest.json`。
-      new VueSSRClientPlugin()
-    ]
+      new VueSSRClientPlugin(),
+    ],
   });
-  if(utils.isDevMode){
+  if (utils.isDevMode) {
     clientConfig.plugins.push(liveReloadPlugin);
-  }else{
-    //TODO:抽取css暂时不能在vue-ssr状态使用，官方说明只要是提供vue-ssr-client-manifest.json的情况下是ok的，待解决
+  } else {
+    // TODO:抽取css暂时不能在vue-ssr状态使用，官方说明只要是提供vue-ssr-client-manifest.json的情况下是ok的，待解决
     clientConfig.plugins = clientConfig.plugins.concat([
       new MiniCssExtractPlugin({
         filename: utils.isDevMode ? '[name].css' : '[name]-[contenthash].css',
@@ -72,12 +72,12 @@ module.exports = () => {
     ]);
   }
   // 服务端配置
-  let serverConfig=merge(baseConfig(true),{
-    name:'bundle-server',
-    target:'node',
+  const serverConfig = merge(baseConfig(true), {
+    name: 'bundle-server',
+    target: 'node',
     entry: utils.resolve('./src/entry-server.js'),
     output: {
-      libraryTarget: 'commonjs2'
+      libraryTarget: 'commonjs2',
     },
     // https://webpack.js.org/configuration/externals/#function
     // https://github.com/liady/webpack-node-externals
@@ -87,12 +87,12 @@ module.exports = () => {
       // 不要外置化 webpack 需要处理的依赖模块。
       // 你可以在这里添加更多的文件类型。例如，未处理 *.vue 原始文件，
       // 你还应该将修改 `global`（例如 polyfill）的依赖模块列入白名单
-      whitelist: /\.css$/
+      whitelist: /\.css$/,
     }),
     plugins: [
       // 输出vue-ssr-server-bundle.json
       new VueSSRServerPlugin(),
-    ]
-  })
-  return [clientConfig,serverConfig];
-}
+    ],
+  });
+  return [clientConfig, serverConfig];
+};

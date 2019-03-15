@@ -1,5 +1,6 @@
 const os = require('os');
-let isLocal = os.hostname().endsWith('.local');
+
+const isLocal = os.hostname().endsWith('.local');
 
 // isLocal=false;
 

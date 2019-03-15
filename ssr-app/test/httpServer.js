@@ -1,22 +1,22 @@
-const http=require('http');
+const http = require('http');
 const Vue = require('vue');
 const renderer = require('vue-server-renderer').createRenderer();
 
 
-http.createServer(async (req,res)=>{
+http.createServer(async (req, res) => {
   const app = new Vue({
     data: {
-      url: req.url
+      url: req.url,
     },
-    template: `<div>访问的 URL 是： {{ url }}</div>`
+    template: '<div>访问的 URL 是： {{ url }}</div>',
   });
-  let html='';
-  try{
+  let html = '';
+  try {
     html = await renderer.renderToString(app);
-  }catch (err){
+  } catch (err) {
     html = err.toString();
   }
-    res.end(`
+  res.end(`
   <!DOCTYPE html>
   <html lang="en">
     <head>

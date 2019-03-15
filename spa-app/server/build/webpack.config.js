@@ -44,6 +44,9 @@ module.exports = () => {
             output: {
               comments: false,
             },
+            compress: {
+              pure_funcs: ['console.info', 'console.log'],
+            },
           },
         }),
         new OptimizeCssAssetsPlugin({

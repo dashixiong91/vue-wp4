@@ -9,7 +9,13 @@
 </template>
 <script>
 export default {
-
+  mounted() {
+    console.log('console.log test');
+    console.info('console.info test');
+    console.error('console.error test');
+    console.warn('console.warn test');
+    debugger;
+  },
 };
 </script>
 <style lang="scss" scoped>

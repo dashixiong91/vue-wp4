@@ -7,18 +7,23 @@ const { createBundleRenderer } = require('vue-server-renderer');
 const buildUtils = require('../build/utils');
 const envs = require('../envs');
 
+// 静态资源缓存时间
+const maxAge = envs.isLocal ? 0 : 2592000;
+
 // 静态渲染（将文档请求重定向到html-webpack-plugin生成的index.html）
 /* eslint-disable-next-line */
 const staticRender = (root, prefix = '/') => {
   const router = new Router({ prefix });
-  return router.get('*', async (ctx) => {
+  return router.get('*', async (ctx, next) => {
     let newpath = ctx.path.replace(prefix, '/');
     if (path.extname(newpath) === '') {
       newpath = '/index.html';
     }
-    return send(ctx, newpath, {
+    await send(ctx, newpath, {
       root,
+      maxAge,
     });
+    return next();
   }).routes();
 };
 // 按文件类型处理manifest
@@ -46,11 +51,11 @@ const createEjsRenderer = () => {
     return renderFun(context);
   };
 };
-let ejsRenderer = createEjsRenderer();
+let ejsRenderer = envs.isLocal ? null : createEjsRenderer();
 // ejs服务端渲染（解析ejs模板，返回ejs.render结果）
 const ejsSSRRender = (root, prefix = '/') => {
   const router = new Router({ prefix });
-  return router.get('*', async (ctx) => {
+  return router.get('*', async (ctx, next) => {
     const newpath = ctx.path.replace(prefix, '/');
     if (path.extname(newpath) === '') {
       const data = { url: newpath, date: new Date().getTime() };
@@ -58,11 +63,13 @@ const ejsSSRRender = (root, prefix = '/') => {
         ejsRenderer = createEjsRenderer();
       }
       ctx.body = ejsRenderer(data);
-      return;
+      return next();
     }
-    return send(ctx, newpath, {
+    await send(ctx, newpath, {
       root,
+      maxAge,
     });
+    return next();
   }).routes();
 };
 // 创建vueSsrRender
@@ -78,12 +85,12 @@ const createVueRenderer = () => {
 
 
 let vueRenderer = null;
-// let vueRenderer = createVueRenderer();
+// let vueRenderer = envs.isLocal ? null : createVueRenderer();
 // vue服务端渲染（将文档请求交给vue-ssr接管）
 /* eslint-disable-next-line */
 const vueSSRRender = (root, prefix = '/') => {
   const router = new Router({ prefix });
-  return router.get('*', async (ctx) => {
+  return router.get('*', async (ctx, next) => {
     const newpath = ctx.path.replace(prefix, '/');
     if (path.extname(newpath) === '') {
       const context = { url: newpath };
@@ -91,11 +98,13 @@ const vueSSRRender = (root, prefix = '/') => {
         vueRenderer = createVueRenderer();
       }
       ctx.body = await vueRenderer.renderToString(context);
-      return;
+      return next();
     }
-    return send(ctx, newpath, {
+    await send(ctx, newpath, {
       root,
+      maxAge,
     });
+    return next();
   }).routes();
 };
 

@@ -1,6 +1,6 @@
 const path = require('path');
 // 开发模式
-exports.isDevMode = process.env.NODE_ENV && process.env.NODE_ENV !== 'production';
+exports.isDevMode = process.env.NODE_ENV !== 'production';
 // 解析路径
 exports.resolve = (filename) => {
   const baseDir = path.resolve(__dirname, '../../');

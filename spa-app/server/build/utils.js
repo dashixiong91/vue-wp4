@@ -1,7 +1,6 @@
 const path = require('path');
-const envs = require('../envs');
 // 开发模式
-exports.isDevMode = envs.isLocal || (process.env.NODE_ENV && process.env.NODE_ENV !== 'production');
+exports.isDevMode = process.env.NODE_ENV && process.env.NODE_ENV !== 'production';
 // 解析路径
 exports.resolve = (filename) => {
   const baseDir = path.resolve(__dirname, '../../');

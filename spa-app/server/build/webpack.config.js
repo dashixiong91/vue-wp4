@@ -14,7 +14,7 @@ const utils = require('./utils');
 // 导出webpackConfig
 module.exports = () => {
   // 客户端配置
-  const clientConfig = merge(baseConfig(), {
+  const clientConfig = merge(baseConfig({}), {
     name: 'bundle-client',
     target: 'web',
     entry: {
@@ -75,7 +75,7 @@ module.exports = () => {
     ]);
   }
   // 服务端配置
-  const serverConfig = merge(baseConfig(true), {
+  const serverConfig = merge(baseConfig({ isServer: true }), {
     name: 'bundle-server',
     target: 'node',
     entry: utils.resolve('./src/entry-server.js'),

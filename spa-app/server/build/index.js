@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const util = require('util');
-const webpackConfig = require('./webpack.config')();
+const webpackConfig = require('./webpack.config')({});
 
 
 const logger = console;

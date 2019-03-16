@@ -6,7 +6,7 @@ const utils = require('./utils');
 const config = require('../config');
 
 // 导出webpackConfig
-module.exports = (isServer = false) => {
+module.exports = ({ isServer = false }) => {
   const webpackConfig = {
     mode: utils.isDevMode ? 'development' : 'production',
     entry: {},
@@ -39,8 +39,7 @@ module.exports = (isServer = false) => {
           test: /\.css$/,
           use: [
             { loader: (utils.isDevMode || isServer) ? 'vue-style-loader' : MiniCssExtractPlugin.loader },
-            { loader: 'css-loader', options: { importLoaders: 1 } },
-            { loader: 'postcss-loader' },
+            { loader: 'css-loader' },
           ],
         },
         {

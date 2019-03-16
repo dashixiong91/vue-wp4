@@ -57,6 +57,7 @@ module.exports = ({ isServer = false }) => {
           loader: 'url-loader',
           options: {
             limit: 8 * 1024,
+            name: '[hash:7].[ext]',
           },
         },
       ],

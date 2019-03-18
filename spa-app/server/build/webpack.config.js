@@ -23,6 +23,7 @@ module.exports = () => {
     optimization: {
       moduleIds: 'hashed',
       namedChunks: true,
+      noEmitOnErrors: false,
       runtimeChunk: {
         name: 'manifest',
       },
@@ -33,8 +34,15 @@ module.exports = () => {
           verdor: {
             test: /node_modules/,
             name: 'verdor',
-            priority: 1,
             reuseExistingChunk: true,
+            priority: -10,
+          },
+          default: {
+            test: module => module.type === 'javascript/auto',
+            automaticNamePrefix: '',
+            reuseExistingChunk: true,
+            minChunks: 2,
+            priority: -20,
           },
         },
       },

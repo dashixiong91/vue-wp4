@@ -29,7 +29,6 @@ module.exports = () => {
       },
       splitChunks: {
         chunks: 'all',
-        maxInitialRequests: 5,
         cacheGroups: {
           verdor: {
             test: /node_modules/,

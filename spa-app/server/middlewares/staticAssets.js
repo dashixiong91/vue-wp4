@@ -84,8 +84,7 @@ const createVueRenderer = () => {
 };
 
 
-let vueRenderer = null;
-// let vueRenderer = envs.isLocal ? null : createVueRenderer();
+let vueRenderer = envs.isLocal ? null : createVueRenderer();
 // vue服务端渲染（将文档请求交给vue-ssr接管）
 /* eslint-disable-next-line */
 const vueSSRRender = (root, prefix = '/') => {

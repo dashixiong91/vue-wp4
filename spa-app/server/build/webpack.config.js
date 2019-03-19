@@ -10,6 +10,7 @@ const nodeExternals = require('webpack-node-externals');
 const liveReloadPlugin = require('./plugins/liveReloadPlugin');
 const baseConfig = require('./webpack.base.config.js');
 const utils = require('./utils');
+const envs = require('../envs');
 
 // 导出webpackConfig
 module.exports = () => {
@@ -71,9 +72,10 @@ module.exports = () => {
       new VueSSRClientPlugin(),
     ],
   });
-  if (utils.isDevMode) {
+  if (envs.isLocal) {
     clientConfig.plugins.push(liveReloadPlugin);
-  } else {
+  }
+  if (!utils.isDevMode) {
     // TODO:抽取css暂时不能在vue-ssr状态使用，官方说明只要是提供vue-ssr-client-manifest.json的情况下是ok的，待解决
     clientConfig.plugins = clientConfig.plugins.concat([
       new MiniCssExtractPlugin({
